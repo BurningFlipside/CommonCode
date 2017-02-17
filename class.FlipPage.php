@@ -361,9 +361,11 @@ class FlipPage extends WebPage
         $this->links = array();
         $this->notifications = array();
         $this->aboutUrl = $this->settings->getGlobalSetting('about_url', 'https://www.burningflipside.com/about');
-        $this->eventUrl = $this->settings->getGlobalSetting('event_url', 'https://www.burningflipside.com/about/event');
-        $this->aarUrl = $this->settings->getGlobalSetting('aar_url', 'https://www.burningflipside.com/about/aar');
-        $this->privacyUrl = $this->settings->getGlobalSetting('privacy_url', 'https://www.burningflipside.com/about/privacy');
+        $this->aboutMenu = $this->settings->getGlobalSetting('event_menu', array(
+            'Burning Flipside'=>'https://www.burningflipside.com/about/event',
+            'AAR, LLC'=>'https://www.burningflipside.com/organization/aar',
+            'Privacy Policy'=>'https://www.burningflipside.com/about/privacy'
+        ));
         $this->loginUrl = $this->settings->getGlobalSetting('login_url', 'https://profiles.burningflipside.com/login.php');
         $this->logoutUrl = $this->settings->getGlobalSetting('logout_url', 'https://profiles.burningflipside.com/logout.php');
         $this->user = FlipSession::getUser();
@@ -400,12 +402,17 @@ class FlipPage extends WebPage
             $this->add_links();
             $this->addLink('Logout', $this->logoutUrl);
         }
-        $aboutMenu = array(
-            'Burning Flipside' => $this->eventUrl,
-            'AAR, LLC' => $this->aarUrl,
-            'Privacy Policy' => $this->privacyUrl
-        );
-        $this->addLink('About', $this->aboutUrl, $aboutMenu);
+        if($this->aboutUrl !== false)
+        {
+            if(!empty($this->aboutMenu))
+            {
+                $this->addLink('About', $this->aboutUrl, $this->aboutMenu);
+            }
+            else
+            {
+                $this->addLink('About', $this->aboutUrl);
+            }
+        }
     }
 
     /**
