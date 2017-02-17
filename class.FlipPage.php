@@ -364,8 +364,8 @@ class FlipPage extends WebPage
         $this->eventUrl = $this->settings->getGlobalSetting('event_url', 'https://www.burningflipside.com/about/event');
         $this->aarUrl = $this->settings->getGlobalSetting('aar_url', 'https://www.burningflipside.com/about/aar');
         $this->privacyUrl = $this->settings->getGlobalSetting('privacy_url', 'https://www.burningflipside.com/about/privacy');
-        $this->loginUrl = $this->settings->getGlobalSetting('login_url', 'login.php');
-        $this->logoutUrl = $this->settings->getGlobalSetting('logout_url', 'logout.php');
+        $this->loginUrl = $this->settings->getGlobalSetting('login_url', 'https://profiles.burningflipside.com/login.php');
+        $this->logoutUrl = $this->settings->getGlobalSetting('logout_url', 'https://profiles.burningflipside.com/logout.php');
         $this->user = FlipSession::getUser();
         $this->addAllLinks();
     }
@@ -627,7 +627,7 @@ class FlipPage extends WebPage
      */
     public function addNotification($message, $severity = self::NOTIFICATION_INFO, $dismissible = true)
     {
-        array_push($this->notifications, array('msg'=>$message, 'sev'=>$severity, 'dismissible'=>$dismissible)); 
+        array_push($this->notifications, array('msg'=>$message, 'sev'=>$severity, 'dismissible'=>$dismissible));
     }
 
     /**
@@ -653,7 +653,7 @@ class FlipPage extends WebPage
             switch($this->notifications[$i]['sev'])
             {
                 case self::NOTIFICATION_INFO:
-                    $prefix = '<strong>Notice:</strong> '; 
+                    $prefix = '<strong>Notice:</strong> ';
                     break;
                 case self::NOTIFICATION_WARNING:
                     $prefix = '<strong>Warning!</strong> ';
@@ -711,6 +711,17 @@ class FlipPage extends WebPage
     }
 
     /**
+     * Add some global js vars
+     */
+    private function addJSGlobals()
+    {
+      $this->body = $this->body.'<script>
+var loginUrl = \''.$this->loginUrl.'\'
+var logoutUrl = \''.$this->logoutUrl.'\'
+</script>';
+    }
+
+    /**
      * Draw the page
      *
      * @param boolean $header Draw the header
@@ -720,6 +731,7 @@ class FlipPage extends WebPage
         $this->renderNotifications();
         $this->addNoScript();
         $this->addAnalyticsBlock();
+        $this->addJSGlobals();
         if($this->header || $header)
         {
             $this->addHeader();

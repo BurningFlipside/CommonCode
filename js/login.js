@@ -5,7 +5,7 @@ function login_submit_done(jqXHR)
         var failed = getParameterByName('failed')*1;
         var return_val = window.location;
         failed++;
-        window.location = 'https://profiles.burningflipside.com/login.php?failed='+failed+'&return='+return_val;
+        window.location = window.loginUrl.'?failed='+failed+'&return='+return_val;
     }
     else
     {
