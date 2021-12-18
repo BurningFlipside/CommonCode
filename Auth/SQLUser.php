@@ -108,5 +108,70 @@ class SQLUser extends User
         $data = array($propName => $value);
         $res = $userDT->update($filter, $data);
     }
+
+    public function validate_reset_hash($hash)
+    {
+        if(isset($this->data['resetHash']) && strcmp($hash, $this->data['resetHash']) == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected function setPass($password)
+    {
+        $filter = new \Flipside\Data\Filter('uid eq "'.$this->uid.'"');
+        $userDT = $this->auth->getCurrentUserDataTable();
+        $data = array('userPassword' => \password_hash($password, \PASSWORD_DEFAULT));
+        return $userDT->update($filter, $data);
+    }
+
+    public function validate_password($password)
+    {
+        if(isset($this->data['userPassword']) && $this->verifyPass($password, $this->data['userPassword']))
+        {
+            return true;
+        }
+        //Check the DB since we remove this from the in session copy
+        $filter = new \Flipside\Data\Filter('uid eq "'.$this->uid.'"');
+        $userDT = $this->auth->getCurrentUserDataTable();
+        $data = $userDT->read($filter, array('userPassword'));
+        return $this->verifyPass($password, $data[0]['userPassword']);
+    }
+
+    private function verifyPass($givenPass, $savedPass)
+    {
+        //Is this in the even better PHP bcrypt hash format?
+        if(\password_verify($givenPass, $savedPass))
+        {
+            return true;
+        }
+        //Is it in the slightly less secure, but still good LDAP format?
+        if(substr($savedPass, 0, 6) === "{SSHA}")
+        {
+            return $this->verifyLDAPSHAAPass($givenPass, $savedPass);
+        }
+        //Didn't pass password_verify and not in LDAP format
+        return false;
+    }
+
+    private function hashLDAPPassword($password, $salt)
+    {
+        $shaHashed = sha1($password.$salt);
+        $packed = pack("H*",$shaHashed);
+        $encoded = base64_encode($packed.$salt);
+        return "{SSHA}".$encoded;
+    }
+
+    private function verifyLDAPSHAAPass($givenPass, $sshaHash)
+    {
+        //Remove {SSHA} from start
+        $encodedString = substr($sshaHash, 6);
+        $decoded = base64_decode($encodedString);
+        //Get the salt, SHA1 is always 20 chars
+        $salt = substr($decoded, 20);
+        //hash the password given and compare it to the saved password hash
+        return $this->hashLDAPPassword($givenPass, $salt) == $sshaHash;
+    }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */
