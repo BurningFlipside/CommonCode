@@ -53,7 +53,7 @@ class Filter
         return $children;
     }
 
-    public function to_sql_string()
+    public function to_sql_string($dataset = null)
     {
         $ret = '';
         $count = count($this->children);
@@ -73,7 +73,7 @@ class Filter
             }
             else
             {
-                $ret .= $this->children[$i]->to_sql_string();
+                $ret .= $this->children[$i]->to_sql_string($dataset);
             }
         }
         return $ret.$this->sqlAppend;
@@ -193,8 +193,12 @@ class Filter
         return array();
     }
 
-    public function contains($substr)
+    public function contains(string $substr)
     {
+	if($this->string === null)
+	{
+            return null;
+	}
         return strstr($this->string, $substr) !== false;
     }
 
@@ -208,7 +212,7 @@ class Filter
                 continue;
             }
             if(strstr($this->children[$i]->var1, $substr) !== false ||
-               strstr($this->children[$i]->var2, $substr) !== false)
+               (is_string($this->children[$i]->var2) && strstr($this->children[$i]->var2, $substr) !== false))
             {
                 return $this->children[$i];
             }

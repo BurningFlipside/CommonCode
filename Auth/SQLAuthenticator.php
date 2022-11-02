@@ -208,7 +208,15 @@ class SQLAuthenticator extends Authenticator
     {
         $dataTable = $this->getDataTable($tableName);
         $filter = new \Flipside\Data\Filter($filterStr);
-        $entities = $dataTable->read($filter);
+        try
+        {
+            $entities = $dataTable->read($filter);
+        }
+        catch(\PDOException $ex)
+        {
+            error_log("Failed to get entity. PDOException: ".$ex->getMessage());
+            return null;
+        }
         if(empty($entities))
         {
             return null;
@@ -484,6 +492,10 @@ class SQLAuthenticator extends Authenticator
     {
         $newUser = array();
         $newUser['uid'] = $user->uid;
+        if(strlen($newUser['uid']) === 0)
+        {
+            $newUser['uid'] = $user->mail;
+        }
         $newUser['mail'] = $user->mail;
         $newUser['userPassword'] = \password_hash($user->password, \PASSWORD_DEFAULT);
         $dt = $this->getCurrentUserDataTable();

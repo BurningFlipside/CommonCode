@@ -107,14 +107,14 @@ class MongoDataSet extends DataSet
         $this->db_name = $params['db'];
     }
 
-    public function find($query = array(), $options = array(), $collectionName)
+    public function find($query = array(), $options = array(), $collectionName = '')
     {
         $namespace = $this->db_name.'.'.$collectionName;
         $dbQuery = new \MongoDB\Driver\Query($query, $options);
         return $this->manager->executeQuery($namespace, $dbQuery);
     }
 
-    public function insert(&$document, $options = array(), $collectionName)
+    public function insert(&$document, $options = array(), $collectionName = '')
     {
         $namespace = $this->db_name.'.'.$collectionName;
         $dbWrite = new \MongoDB\Driver\BulkWrite();
@@ -139,7 +139,7 @@ class MongoDataSet extends DataSet
         return false;
     }
 
-    public function remove($criteria = array(), array $options = array(), $collectionName)
+    public function remove($criteria = array(), array $options = array(), $collectionName = '')
     {
         $namespace = $this->db_name.'.'.$collectionName;
         $dbWrite = new \MongoDB\Driver\BulkWrite();
@@ -148,7 +148,7 @@ class MongoDataSet extends DataSet
         return $res->getDeletedCount() >= 1;
     }
 
-    public function update($criteria, $new_object, $options = array(), $collectionName)
+    public function update($criteria, $new_object, $options = array(), $collectionName = '')
     {
         $namespace = $this->db_name.'.'.$collectionName;
         $dbWrite = new \MongoDB\Driver\BulkWrite();
@@ -177,7 +177,7 @@ class MongoDataSet extends DataSet
         return false;
     }
 
-    public function count($query = array(), $options = array(), $collectionName)
+    public function count($query = array(), $options = array(), $collectionName = '')
     {
         $cmd = new \MongoDB\Driver\Command(['count'=>$collectionName, 'query'=>$query]);
         $cursor = $this->manager->executeCommand($this->db_name, $cmd);

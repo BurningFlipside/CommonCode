@@ -375,7 +375,7 @@ class User extends \Flipside\SerializableObject
      *
      * @return array A simple keyed array representing the user
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $user = array();
         $user['displayName'] = $this->displayName;

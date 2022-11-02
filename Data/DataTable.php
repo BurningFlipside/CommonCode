@@ -28,7 +28,7 @@ abstract class DataTable
      */
     public abstract function read($filter = false, $select = false, $count = false, $skip = false, $sort = false, $params = false);
 
-    public abstract function update($filter, $data);
+    public abstract function update($filter, $data, $bypassQuote = false);
 
     public abstract function delete($filter);
 }

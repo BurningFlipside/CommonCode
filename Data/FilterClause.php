@@ -94,9 +94,13 @@ class FilterClause
         $this->var1  = $field;
         $this->op    = $this->odataOpToStd($op);
         $this->var2  = $rest;
+        if($this->op === 'in')
+        {
+            $this->var2 = explode(",",trim($rest, " ()"));
+        }
     }
 
-    public function to_sql_string()
+    public function to_sql_string($dataset)
     {
         switch($this->op)
         {
@@ -104,6 +108,14 @@ class FilterClause
             case 'contains':
                 return $this->var1.' LIKE \'%'.trim($this->var2, "'").'%\'';
                 break;
+            case 'in':
+                $array = array();
+                $count = count($this->var2);
+                for($i = 0; $i < $count; $i++)
+                {
+                    $array[$i] = $dataset->quote($this->var2[$i]);
+                }
+                return $this->var1.' IN ('.implode(',',$array).')';
             default:
                 return $this->var1.$this->op.$this->var2;
                 break;
@@ -140,9 +152,9 @@ class FilterClause
             $case = true;
         }
         if($case)
-	{
-            if(class_exists('MongoRegex'))
 	    {
+            if(class_exists('MongoRegex'))
+	        {
                 return array($field=>array('$regex'=>new \MongoRegex('/'.$this->var2.'/i')));
             }
             else
@@ -174,6 +186,8 @@ class FilterClause
                 return '$gt';
             case '>=':
                 return '$gte';
+            case 'in':
+                return '$in';
             default:
                 return $op;
         }
@@ -206,7 +220,14 @@ class FilterClause
         {
             $this->var2 = intval($this->var2);
         }
-        else
+        else if(is_string($this->var2) && $this->var2[0] === '(')
+        {
+            $this->var2 = str_replace("(", "", $this->var2);
+            $this->var2 = str_replace(")", "", $this->var2);
+            $this->var2 = str_replace("'", "", $this->var2);
+            $this->var2 = explode(",", $this->var2);
+        }
+        else if(is_string($this->var2))
         {
             $this->var2 = trim($this->var2, "'");
         }

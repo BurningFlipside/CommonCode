@@ -42,7 +42,14 @@ class WebPage
         //$this->twig->addExtension(new \Twig\Extension\DebugExtension());
         $this->content = array('pageTitle' => $title);
         $this->user = \Flipside\FlipSession::getUser();
-        $this->content['user'] = $this->user;
+        if($this->user !== null)
+        {
+            $this->content['user'] = $this->user->jsonSerialize();
+        }
+        else
+        {
+            $this->content['user'] = null;
+        }
         $this->content['header'] = array();
         $this->content['header']['sites'] = array();
         $this->content['header']['sites']['Profiles'] = $this->profilesUrl;

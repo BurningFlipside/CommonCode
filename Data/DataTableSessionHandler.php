@@ -13,7 +13,7 @@ class DataTableSessionHandler implements \SessionHandlerInterface
         $this->dataTableName = $dataTable;
     }
 
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
        $this->dataTable = \Flipside\DataSetFactory::getDataTableByNames($this->dataSetName, $this->dataTableName);
        if($this->dataTable)
@@ -23,15 +23,15 @@ class DataTableSessionHandler implements \SessionHandlerInterface
        return false;
     }
 
-    public function close()
+    public function close(): bool
     {
         return true;
     }
 
-    public function read($id)
+    public function read($id): string|false
     {
         $filter = new \Flipside\Data\Filter("sessionId eq '$id'");
-        $data = $this->dataTable->read($filter, array('sessionData'));
+	$data = $this->dataTable->read($filter, array('sessionData'));
         if(empty($data))
         {
             return '';
@@ -39,10 +39,10 @@ class DataTableSessionHandler implements \SessionHandlerInterface
         return $data[0]['sessionData'];
     }
 
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
         $filter = new \Flipside\Data\Filter("sessionId eq '$id'");
-        $res = $this->dataTable->update($filter, array('sessionData'=>$data, 'sessionLastAccess'=>date("Y-m-d H:i:s")));
+	$res = $this->dataTable->update($filter, array('sessionData'=>$data, 'sessionLastAccess'=>date("Y-m-d H:i:s")));
         if($res === false)
         {
             $res = $this->dataTable->create(array('sessionId'=>$id, 'sessionData'=>$data, 'sessionLastAccess'=>date("Y-m-d H:i:s")));
@@ -54,16 +54,16 @@ class DataTableSessionHandler implements \SessionHandlerInterface
         return $res;
     }
 
-    public function destroy($id)
+    public function destroy($id): bool
     {
         $filter = new \Flipside\Data\Filter("sessionId eq '$id'");
         return $this->dataTable->delete($filter);
     }
 
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): int|false
     {
         $date = date("Y-m-d H:i:s", time()-$maxlifetime);
-        $filter = new \Flipside\Data\Filter("sessionLastAccess lt $date");
+        $filter = new \Flipside\Data\Filter("sessionLastAccess lt '$date'");
         return $this->dataTable->delete($filter);
     }
 }

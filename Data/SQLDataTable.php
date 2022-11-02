@@ -31,7 +31,7 @@ class SQLDataTable extends DataTable
         $where = false;
         if($filter !== false)
         {
-            $where = $filter->to_sql_string();
+            $where = $filter->to_sql_string($this->dataset);
         }
         $ret = $this->dataset->read($this->tablename, $where, 'COUNT(*)');
         if($ret === false || !isset($ret[0]) || !isset($ret[0]['COUNT(*)']))
@@ -49,7 +49,14 @@ class SQLDataTable extends DataTable
         $where = false;
         if($filter !== false)
         {
-            $where = $filter->to_sql_string();
+            if(is_string($filter))
+            {
+                $where = $filter;
+            }
+            else
+            {
+                $where = $filter->to_sql_string($this->dataset);
+            }
         }
         if($select !== false && is_array($select))
         {
@@ -58,10 +65,10 @@ class SQLDataTable extends DataTable
         return $this->dataset->read($this->tablename, $where, $select, $count, $skip, $sort);
     }
 
-    public function update($filter, $data)
+    public function update($filter, $data, $bypassQuote = false)
     {
-        $where = $filter->to_sql_string();
-        return $this->dataset->update($this->tablename, $where, $data);
+        $where = $filter->to_sql_string($this->dataset);
+        return $this->dataset->update($this->tablename, $where, $data, $bypassQuote);
     }
 
     public function create($data)
@@ -74,7 +81,7 @@ class SQLDataTable extends DataTable
         $where = false;
         if($filter !== false)
         {
-            $where = $filter->to_sql_string();
+            $where = $filter->to_sql_string($this->dataset);
         }
         return $this->dataset->delete($this->tablename, $where);
     }

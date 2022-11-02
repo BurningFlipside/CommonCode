@@ -148,7 +148,7 @@ class FlipsideCAPTCHA implements \JsonSerializable
         return json_encode($this->jsonSerialize());
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $res = array();
         $res['id'] = $this->random_id;

@@ -225,7 +225,7 @@ class SQLDataSet extends DataSet
      *
      * @return boolean true if successful, false otherwise
      */
-    public function update($tablename, $where, $data)
+    public function update($tablename, $where, $data, $bypassQuote)
     {
         if($this->pdo === null)
         {
@@ -243,6 +243,12 @@ class SQLDataSet extends DataSet
             if($data[$cols[$i]] === null)
             {
                 array_push($set, $cols[$i].'=NULL');
+            }
+            else if($bypassQuote)
+            {
+                $tmp = str_replace("\n", '\n', $data[$cols[$i]]);
+                $tmp = str_replace("\r", '', $tmp);
+                array_push($set, $cols[$i].'=\''.$tmp.'\'');
             }
             else
             {
@@ -323,7 +329,15 @@ class SQLDataSet extends DataSet
     public function delete($tablename, $where)
     {
         $sql = "DELETE FROM `$tablename` WHERE $where";
-        if($this->pdo->exec($sql) === false)
+        try
+        {
+            $res = $this->pdo->exec($sql);
+        }
+        catch(\PDOException $ex)
+        {
+            throw $ex;
+        }
+        if($res === false)
         {
             return false;
         }
@@ -351,6 +365,11 @@ class SQLDataSet extends DataSet
     public function getLastError()
     {
         return $this->pdo->errorInfo();
+    }
+
+    public function quote(string $string, int $type = \PDO::PARAM_STR): string|false
+    {
+        return $this->pdo->quote($string, $type);
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

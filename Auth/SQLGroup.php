@@ -21,7 +21,11 @@ class SQLGroup extends Group
         if(isset($this->data['cn']))
         {
             return $this->data['cn'];
-        }
+	}
+	if(isset($this->data['groupCN']))
+	{
+	    return $this->data['groupCN'];
+	}
         return false;
     }
 
@@ -135,6 +139,25 @@ class SQLGroup extends Group
 
     public function addMember($name, $isGroup = false, $flush = true)
     {
+        if(!isset($this->tmpMembers))
+        {
+            $this->tmpMembers = array();
+            $gid = $this->getGroupName();
+        	$memberDT = $this->auth->getDataTable('groupUserMap');
+            $mems = $memberDT->read(new \Flipside\Data\Filter('groupCN eq "'.$gid.'"'));
+            $count = count($mems);
+            for($i = 0; $i < $count; $i++)
+            {
+                if($mems[$i]['uid'] != null)
+                {
+                    array_push($this->tmpMembers, array('uid' => $mems[$i]['uid']));
+                }
+                else
+                {
+                    array_push($this->tmpMembers, array('gid' => $mems[$i]['gid']));
+                }
+            }
+        }
         if($isGroup)
         {
         	array_push($this->tmpMembers, array('gid' => $name));
@@ -145,9 +168,9 @@ class SQLGroup extends Group
         }
         if($flush)
         {
-                $gid = $this->getGroupName();
+            $gid = $this->getGroupName();
         	$memberDT = $this->auth->getDataTable('groupUserMap');
-                //Get all cu rrent direct members
+                //Get all current direct members
                 $existing = $memberDT->read(new \Flipside\Data\Filter('groupCN eq "'.$gid.'"'));
                 $exCount = count($existing);
                 $newCount = count($this->tmpMembers);
@@ -156,7 +179,7 @@ class SQLGroup extends Group
                     $isUser = isset($existing[$i]['uid']);
                     for($j = 0; $j < $newCount; $j++)
                     {
-                        if($this->tmpMembers[$j] === false)
+                        if($this->tmpMembers[$j] === false || $existing[$i] === false)
                         {
                             continue;
                         }

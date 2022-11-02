@@ -84,14 +84,14 @@ class MongoDataTable extends DataTable
     public function create($data)
     {
         $res = $this->collection->insert($data, array(), $this->name);
-        if($res === false || $res['err'] !== null)
+        if($res === false || ($res !== true && $res['err'] !== null))
         {
             return false;
         }
         return $data['_id'];
     }
 
-    public function update($filter, $data)
+    public function update($filter, $data, $bypassQuote = false)
     {
         $criteria = $this->getCriteriaFromFilter($filter);
         if(!is_array($data))
@@ -103,7 +103,7 @@ class MongoDataTable extends DataTable
             unset($data['_id']);
         }
         $res = $this->collection->update($criteria, array('$set' => $data), array(), $this->name);
-        if($res === false || $res['err'] !== null)
+        if($res === false || ($res !== true && $res['err'] !== null))
         {
             return false;
         }

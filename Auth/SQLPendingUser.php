@@ -54,7 +54,7 @@ class SQLPendingUser extends PendingUser
         return $this->blob->password;
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->blob->$offset;
     }

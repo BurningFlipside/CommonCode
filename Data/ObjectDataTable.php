@@ -53,7 +53,7 @@ class ObjectDataTable extends DataTable
         return $res;
     }
 
-    public function update($filter, $data)
+    public function update($filter, $data, $bypassQuote = false)
     {
         if(method_exists($data, 'preUpdate'))
         {

@@ -80,7 +80,7 @@ class Group extends \Flipside\SerializableObject
         return false;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $group = array();
         $group['cn'] = $this->getGroupName();

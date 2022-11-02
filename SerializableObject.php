@@ -47,7 +47,7 @@ class SerializableObject implements \ArrayAccess, \JsonSerializable
      *
      * @return array The object in a more serialized format
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return (array)$this;
     }
@@ -222,7 +222,7 @@ class SerializableObject implements \ArrayAccess, \JsonSerializable
      * @param string $offset The key to set
      * @param mixed $value The value for the key
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->{$offset} = $value;
     }
@@ -234,7 +234,7 @@ class SerializableObject implements \ArrayAccess, \JsonSerializable
      *
      * @return boolean Does the key have a value?
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->{$offset});
     }
@@ -244,7 +244,7 @@ class SerializableObject implements \ArrayAccess, \JsonSerializable
      *
      * @param string $offset The key to unset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->{$offset});
     }
@@ -256,7 +256,7 @@ class SerializableObject implements \ArrayAccess, \JsonSerializable
      *
      * @return mixed the value in the key
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->{$offset};
     }
