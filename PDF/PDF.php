@@ -9,7 +9,7 @@ class PDF
 
     function __construct()
     {
-        $this->mpdf = new \Mpdf\Mpdf();
+        $this->mpdf = new \Mpdf\Mpdf(['tempDir'=>'/var/tmp/MPdf']);
     }
 
     public function setPDFFromHTML($html)
