@@ -19,13 +19,4 @@ set_time_limit(120);               // change to 2 minutes for this script
 
 require('vendor/autoload.php');
 
-use BrowscapPHP\Browscap;
-
 date_default_timezone_set('America/Chicago');
-
-$bc = new \BrowscapPHP\BrowscapUpdater('/var/php_cache/browser');
-$adapter = new \WurflCache\Adapter\File([\WurflCache\Adapter\File::DIR => '/var/php_cache/browser']);
-$bc->setCache($adapter);
-//$browscap = new Browscap('/var/php_cache/browser');
-//$browscap->updateCache();
-$bc->update();
