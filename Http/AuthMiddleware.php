@@ -79,11 +79,11 @@ class AuthMiddleware
     {
         $auth = $request->getHeaderLine('Authorization');
         if(empty($auth))
-        {
+	{
             $request = $request->withAttribute('user', $this->getUserFromSession());
         }
         else
-        {
+	{
             $request = $request->withAttribute('user', $this->getUserFromHeader($auth));
         }
         $response = $next($request, $response);
