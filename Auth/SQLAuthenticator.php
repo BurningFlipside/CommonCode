@@ -341,10 +341,10 @@ class SQLAuthenticator extends Authenticator
         $userDataTable = $this->getPendingUserDataTable();
         $clause = $filter->getClause('time');
         $fieldData = false;
-        if($clause === false)
+        if($clause === null)
         {
             $fieldData = $filter->to_mongo_filter();
-            $filter = new \Flipside\Data\Filter('substringof(data,"'.implode($fieldData, ' ').'")');
+            $filter = new \Flipside\Data\Filter('substringof(data,"'.implode('', $fieldData).'")');
         }
         $users = $userDataTable->read($filter, $select, $top, $skip, $orderby);
         if($users === false)
