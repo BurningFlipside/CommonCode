@@ -107,6 +107,10 @@ class SQLUser extends User
         $userDT = $this->auth->getCurrentUserDataTable();
         $data = array($propName => $value);
         $res = $userDT->update($filter, $data);
+        if($res === true)
+        {
+            $this->data[$propName] = $value;
+        }
     }
 
     public function validate_reset_hash($hash)
@@ -137,6 +141,13 @@ class SQLUser extends User
         $userDT = $this->auth->getCurrentUserDataTable();
         $data = $userDT->read($filter, array('userPassword'));
         return $this->verifyPass($password, $data[0]['userPassword']);
+    }
+
+    public function delete()
+    {
+        $filter = new \Flipside\Data\Filter('uid eq "'.$this->uid.'"');
+        $userDT = $this->auth->getCurrentUserDataTable();
+        return $userDT->delete($filter);
     }
 
     private function verifyPass($givenPass, $savedPass)
