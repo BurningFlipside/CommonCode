@@ -135,6 +135,10 @@ class FlipSession extends Singleton
     public static function setUser($user)
     {
         $_SESSION['flipside_user'] = $user;
+        if(isset($_SESSION['AuthData']) && isset($_SESSION['AuthData']['extended']))
+        {
+            $_SESSION['AuthData']['extended'] = json_decode(json_encode($user));
+        }
     }
 
     /**
