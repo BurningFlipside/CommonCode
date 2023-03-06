@@ -203,7 +203,14 @@ class SQLDataSet extends DataSet
         {
             $sql .= $tmp;
         }
-        $stmt = $this->pdo->query($sql, \PDO::FETCH_ASSOC);
+        try
+        {
+            $stmt = $this->pdo->query($sql, \PDO::FETCH_ASSOC);
+        }
+        catch(\PDOException $ex)
+        {
+            return false;
+        }
         if($stmt === false)
         {
             return false;
