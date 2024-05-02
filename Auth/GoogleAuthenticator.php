@@ -53,7 +53,7 @@ class GoogleAuthenticator extends Authenticator
         }
 
         $auth = \Flipside\AuthProvider::getInstance();
-        $localUsers = $auth->getUsersByFilter(new \Flipside\Data\Filter('mail eq '.$googleUser->email));
+        $localUsers = $auth->getUsersByFilter(new \Flipside\Data\Filter('mail eq \''.$googleUser->email.'\''));
         if($localUsers !== false && isset($localUsers[0]))
         {
             if($localUsers[0]->canLoginWith('google.com'))
