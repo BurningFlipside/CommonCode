@@ -21,6 +21,9 @@
     {% for j in js %}
       <script src="{{ j }}" type="text/javascript"></script>
     {% endfor %}
+    {% for j in asyncJs %}
+      <script async defer src="{{ j.src }}" type="text/javascript" onload="{{ j.onload }}"></script>
+    {% endfor %}
     {% block headBlock %}{% endblock %}
     <script type="text/javascript">
       if(window.Sentry !== undefined) {
