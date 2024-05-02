@@ -19,7 +19,7 @@ class RestAPI
 
     public function setup($app)
     {
-        \Sentry\init(['dsn' => 'https://8d76f6c4cb3b409bbe7ed4300e054afd@sentry.io/4283882' ]);
+        \Sentry\init(['dsn' => 'https://8d76f6c4cb3b409bbe7ed4300e054afd@sentry.io/4283882', 'traces_sample_rate' => 1.0, 'profiles_sample_rate' => 1.0, ]);
         return $app->any('[/]', $this);
     }
 
