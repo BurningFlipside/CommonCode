@@ -14,7 +14,8 @@
         "twig/twig": "^3.3",
         "symfony/yaml": "^6.1",
         "sentry/sdk": "^3.1.0",
-        "mpdf/qrcode": "^1.1"
+        "mpdf/qrcode": "^1.1",
+        "square/square": "^25.0.0.20221214"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",
@@ -29,5 +30,10 @@
     },
     "scripts": {
         "test": "phpunit"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
