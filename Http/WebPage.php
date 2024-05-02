@@ -161,6 +161,15 @@ class WebPage
         }
     }
 
+    public function addAsyncJS($uri, $onLoad)
+    {
+        if(!isset($this->content['asyncJs']))
+        {
+            $this->content['asyncJs'] = array();
+        }
+        array_push($this->content['asyncJs'], array('src'=>$uri, 'onload'=>$onLoad));
+    }
+
     /**
      * Add a CSS file from a set of files known to the framework
      *
