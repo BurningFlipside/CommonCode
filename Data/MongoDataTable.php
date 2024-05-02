@@ -113,7 +113,11 @@ class MongoDataTable extends DataTable
     public function delete($filter)
     {
         $criteria = $this->getCriteriaFromFilter($filter);
-        $res = $this->collection->remove($criteria, array(), $this->name);
+	$res = $this->collection->remove($criteria, array(), $this->name);
+	if($res === true)
+	{
+            return true;
+	}
         if($res === false || $res['err'] !== null)
         {
             return false;
