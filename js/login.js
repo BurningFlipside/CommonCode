@@ -1,60 +1,41 @@
-function login_submit_done(jqXHR)
-{
-    if(jqXHR.status !== 200)
-    {
-        var failed = getParameterByName('failed')*1;
-        var return_val = window.location;
-        failed++;
-        window.location = window.loginUrl+'?failed='+failed+'&return='+return_val;
+function loginSubmitted(e) {
+  e.preventDefault();
+  let url = document.body.dataset.loginUrl;
+  if(url === undefined) {
+    let dir  = document.querySelector('script[src*=login]').getAttribute('src');
+    let parts = dir.split('/');
+    dir = parts.slice(0, parts.length-3).join('/');
+    url = dir+'/api/v1/login';
+  }
+  let form = e.target.form;
+  fetch(url, {
+    method: 'POST',
+    body: new URLSearchParams(new FormData(form))
+  }).then(response => {
+    if(response.ok) {
+      return response.json();
+    } else {
+      let failed = getParameterByName('failed')*1;
+      let return_val = window.location;
+      failed++;
+      window.location = window.loginUrl+'?failed='+failed+'&return='+return_val;
     }
-    else
-    {
-        if(jqXHR.responseJSON !== undefined)
-        {
-            var data = jqXHR.responseJSON;
-            var url  = '';
-            if(data['return'])
-            {
-                url = data['return'];
-            }
-            else
-            {
-                url = getParameterByName('return');
-                if(url === null)
-                {
-                    url = window.location;
-                }
-            }
-            if(data.extended)
-            {
-            	console.log(data.extended);
-            }
-            window.location = url;
-        }
+  }).then(data => {
+    let url = '';
+    if(data['return']) {
+      url = data['return'];
+    } else {
+      url = getParameterByName('return');
+      if(url === null) {
+        url = window.location;
+      }
     }
-}
-
-function login_submitted(e)
-{
-    e.preventDefault();
-    var url = $('body').data('login-url');
-    if(url === undefined)
-    {
-        var dir  = $('script[src*=login]').attr('src');
-        var name = dir.split('/').pop();
-        dir = dir.replace('/'+name,"");
-        name = dir.split('/').pop();
-        dir = dir.replace('/'+name,"");
-        url = dir+'/api/v1/login';
+    if(data.extended) {
+      console.log(data.extended);
     }
-    var form = e.target.form;
-    $.ajax({
-        url: url,
-        data: $(form).serialize(),
-        type: 'post',
-        dataType: 'json',
-        complete: login_submit_done});
-    return false;
+    window.location = url;
+  });
+  return false;
 }
 
 function login_dialog_shown()
@@ -71,45 +52,45 @@ function retryBootstrap() {
   $('#login-dialog').on('shown.bs.modal', login_dialog_shown);
 }
 
-function do_login_init()
-{
-    var login_link = $('ul a[href*=login]');
-    if(window.browser_supports_cors !== undefined && browser_supports_cors())
-    {
-        login_link.attr('data-toggle','modal');
-        login_link.attr('data-target','#login-dialog');
-        login_link.removeAttr('href');
-        login_link.css('cursor', 'pointer');
-        login_link = $("#content a[href*='login']");
-        login_link.attr('data-toggle','modal');
-        login_link.attr('data-target','#login-dialog');
-        login_link.removeAttr('href');
-        login_link.css('cursor', 'pointer');
+function doLoginInit() {
+  let loginLink = document.querySelector('ul a[href*=login]');
+  if(loginLink !== null) {
+    if(window.browser_supports_cors !== undefined && browser_supports_cors()) {
+      loginLink.setAttribute('data-bs-toggle', 'modal');
+      loginLink.setAttribute('data-bs-target', '#login-dialog');
+      loginLink.removeAttribute('href');
+      loginLink.style.cursor = 'pointer';
+      loginLink = document.querySelector('#content a[href*="login"]');
+      if (loginLink !== null) {
+        loginLink.setAttribute('data-bs-toggle', 'modal');
+        loginLink.setAttribute('data-bs-target', '#login-dialog');
+        loginLink.removeAttribute('href');
+        loginLink.style.cursor = 'pointer';
+      }
+    } else {
+      loginLink.setAttribute('href', loginLink.getAttribute('href')+'?return='+document.URL);
     }
-    else
-    {
-        login_link.attr('href', login_link.attr('href')+'?return='+document.URL);
-    }
-    if($('#login_main_form').length > 0)
-    {
-        $('#login_main_form :submit').on('click', login_submitted);
-    }
-    if($('#login_dialog_form').length > 0)
-    {
-        $('#login_dialog_form :submit').on('click', login_submitted);
-    }
-    if($('#login-dialog').length > 0)
-    {
-        retryBootstrap();
-    }
+  }
+  let mainForm = document.getElementById('login_main_form');
+  if(mainForm !== null) {
+    mainForm.querySelector('button[type=submit]').addEventListener('click', loginSubmitted);
+  }
+  let dialogForm = document.getElementById('login_dialog_form');
+  if(dialogForm !== null) {
+    dialogForm.querySelector('button[type=submit]').addEventListener('click', loginSubmitted);
+  }
+  let loginDialog = document.getElementById('login-dialog');
+  if(loginDialog !== null) {
+    retryBootstrap();
+  }
 }
 
 function retryInit() {
   if($ != undefined) {
-    $(do_login_init);
+    $(doLoginInit);
   } else {
     window.setTimeout(retryInit, 200);
   }
 }
 
-retryInit();
+window.addEventListener('load', retryInit);

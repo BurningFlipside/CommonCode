@@ -80,10 +80,10 @@ function browser_supports_input_type(type)
     return i.type !== "text";
 }
 
-var NOTIFICATION_SUCCESS = "alert-success";
-var NOTIFICATION_INFO    = "alert-info";
-var NOTIFICATION_WARNING = "alert-warning";
-var NOTIFICATION_FAILED  = "alert-danger";
+const NOTIFICATION_SUCCESS = "alert-success";
+const NOTIFICATION_INFO    = "alert-info";
+const NOTIFICATION_WARNING = "alert-warning";
+const NOTIFICATION_FAILED  = "alert-danger";
 
 function add_notification(container, message, severity, dismissible)
 {
@@ -103,9 +103,7 @@ function add_notification(container, message, severity, dismissible)
     var alert_div = $('<div/>', {'class': class_str, role: 'alert'});
     if(dismissible)
     {
-        var button = $('<button/>', {type: 'button', 'class': 'close', 'data-dismiss': 'alert'});
-        $('<span/>', {'aria-hidden': 'true'}).html('&times;').appendTo(button);
-        $('<span/>', {'class': 'sr-only'}).html('Close').appendTo(button);
+        var button = $('<button/>', {type: 'button', 'class': 'btn-close', 'data-bs-dismiss': 'alert', 'aria-label': 'Close'});
         button.appendTo(alert_div);
     }
     var prefix = '';
@@ -124,6 +122,49 @@ function add_notification(container, message, severity, dismissible)
     alert_div.append(prefix+message);
     container.prepend(alert_div);
     return alert_div;
+}
+
+function addNotification(container, message, severity, dismissible) {
+  if(severity === undefined) {
+    severity = NOTIFICATION_INFO;
+  }
+  if(dismissible === undefined) {
+    dismissible = true;
+  }
+  let alertDiv = document.createElement('div');
+  alertDiv.classList.add('alert', severity);
+  if(dismissible) {
+    alertDiv.classList.add('alert-dismissible');
+    let button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('btn-close');
+    button.setAttribute('data-bs-dismiss', 'alert');
+    button.setAttribute('aria-label', 'Close');
+    alertDiv.appendChild(button);
+  }
+  let prefix = null;
+  switch(severity) {
+    case NOTIFICATION_INFO:
+      prefix = document.createElement('strong');
+      prefix.innerText = "Notice: ";
+      break;
+    case NOTIFICATION_WARNING:
+      prefix = document.createElement('strong');
+      prefix.innerText = "Warning! ";
+      break;
+    case NOTIFICATION_FAILED:
+      prefix = document.createElement('strong');
+      prefix.innerText = "Warning! ";
+      break;
+  }
+  let span = document.createElement('span');
+  span.innerHTML = message;
+  if(prefix !== null) {
+    alertDiv.appendChild(prefix);
+  }
+  alertDiv.appendChild(span);
+  container.prepend(alertDiv);
+  return alertDiv;
 }
 
 function addButtonToFooter(footer, buttonData)
