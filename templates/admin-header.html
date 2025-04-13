@@ -13,13 +13,13 @@
     {% for name,data in header.sidebar %}
         {% if data.menu is iterable %}
           <li class="nav-item">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapse{{ name }}" data-parent="#exampleAccordion">
+            <a class="nav-link nav-link-collapse collapsed" data-bs-toggle="collapse" href="#collapse{{ name|replace({' ': ''}) }}" data-bs-parent="#exampleAccordion">
               {% if data.icon %}
-                <i class="fa fa-fw {{ data.icon }}"></i>
+		<i class="fa fa-fw {{ data.icon }}"></i>
               {% endif %}
               {{ name | raw}}
             </a>
-            <ul class="sidenav-second-level collapse" id="collapse{{ name }}">
+            <ul class="sidenav-second-level collapse" id="collapse{{ name|replace({' ': ''}) }}">
               {% for name,uri in data.menu %}
                 <li><a href="{{ uri }}">{{ name | raw }}</a></li>
               {% endfor %}
@@ -27,7 +27,9 @@
           </li>
         {% else %}
           <li class="nav-item"><a href="{{ data.url|default('#') }}" class="nav-link">
-            {% if data.icon %}
+            {% if data.iconClass %}
+              <i class="{{ data.iconClass }} {{ data.icon }}"></i>
+            {% elseif data.icon %}
               <i class="fa fa-fw {{ data.icon }}"></i>
             {% endif %}
             {{ name | raw }}

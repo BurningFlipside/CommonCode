@@ -95,5 +95,20 @@ class SQLDataTable extends DataTable
     {
         return $this->dataset->getLastError();
     }
+
+    public function beginTransaction()
+    {
+        return $this->dataset->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->dataset->commit();
+    }
+
+    public function rollBack()
+    {
+        return $this->dataset->rollBack();
+    }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

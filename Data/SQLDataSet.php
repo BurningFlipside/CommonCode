@@ -193,12 +193,12 @@ class SQLDataSet extends DataSet
         {
             $sql .= ' WHERE '.$where;
         }
-        $tmp = $this->getLimitClause($count, $skip);
+        $tmp = $this->getOrderByClause($sort);
         if($tmp !== false)
         {
             $sql .= $tmp;
         }
-        $tmp = $this->getOrderByClause($sort);
+        $tmp = $this->getLimitClause($count, $skip);
         if($tmp !== false)
         {
             $sql .= $tmp;
@@ -377,6 +377,21 @@ class SQLDataSet extends DataSet
     public function quote(string $string, int $type = \PDO::PARAM_STR): string|false
     {
         return $this->pdo->quote($string, $type);
+    }
+
+    public function beginTransaction()
+    {
+        return $this->pdo->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->pdo->commit();
+    }
+
+    public function rollBack()
+    {
+        return $this->pdo->rollBack();
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

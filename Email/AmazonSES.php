@@ -30,6 +30,10 @@ class AmazonSES extends EmailService
         {
             foreach($tos as $to)
             {
+                if($to == null)
+                {
+                    continue;
+                }
                 if(strstr($to, 'free.fr') !== false)
                 {
                     die('Spammer abuse filter!');
@@ -61,9 +65,13 @@ class AmazonSES extends EmailService
             $args['Message']['Subject'] = array();
             $args['Message']['Subject']['Data'] = $email->getSubject();
             $args['Message']['Body'] = array();
-            $args['Message']['Body']['Text'] = array();
+            $textBody = $email->getTextBody();
+            if(strlen($textBody) > 0) 
+            {
+                $args['Message']['Body']['Text'] = array();
+                $args['Message']['Body']['Text']['Data'] = $textBody;
+            }
             $args['Message']['Body']['Html'] = array();
-            $args['Message']['Body']['Text']['Data'] = $email->getTextBody();
             $args['Message']['Body']['Html']['Data'] = $email->getHtmlBody();
             $args['ReplyToAddresses'] = array($email->getReplyTo());
             try {

@@ -114,6 +114,10 @@ class SQLAuthenticator extends Authenticator
 
     private function verifyPass($givenPass, $savedPass)
     {
+        if(strlen($givenPass) === 0)
+        {
+            return false;
+        }
         //Is this in the even better PHP hash format?
         if(\password_verify($givenPass, $savedPass))
         {

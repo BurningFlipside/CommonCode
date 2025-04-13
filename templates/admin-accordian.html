@@ -14,16 +14,17 @@
 <div class="row">
   <div class="accordion container-fluid" id="accordion">
     {% for panel in panels %}
-      <div class="card">
-        <div class="card-header">
-          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#card{{ loop.index }}">{{ panel.title }}</a></h4>
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#card{{ loop.index }}" aria-expanded="true" aria-controls="card{{ loop.index }}">
+            {{ panel.title }}
         </div>
         {% if loop.first %}
-          <div id="card{{ loop.index }}" class="collapse show">
+          <div id="card{{ loop.index }}" class="accordion-collapse collapse show" data-bs-parent="#accordion">
 	{% else %}
-          <div id="card{{ loop.index }}" class="collapse">
+          <div id="card{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#accordion">
 	{% endif %}
-          <div class="card-body">{{ panel.body|raw }}</div>
+          <div class="accordion-body">{{ panel.body|raw }}</div>
       </div>
   {% endfor %}
 </div>

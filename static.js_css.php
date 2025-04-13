@@ -12,10 +12,12 @@ define('JS_TYPEAHEAD', 15);
 define('JS_CHEET', 16);
 define('JS_FLIPSIDE', 20);
 define('JS_LOGIN', 21);
+define('JS_TABULATOR', 22);
 
 define('CSS_BOOTSTRAP_FH', 2);
 define('CSS_DATATABLE', 4);
 define('CSS_JCROP', 5);
+define('CSS_TABULATOR', 6);
 
 global $jsArray;
 $jsArray = array(
@@ -85,8 +87,8 @@ $jsArray = array(
                 'min' => '/js/common/bootbox.min.js'
             ),
             'cdn' => array(
-                'no'  => array('src' => '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.js', 'hash'=> 'sha384-BHF5LmonG4E0P/YVoGa+evSQ0kCfsV79+40QpNopa3jVcY6Yq17QvbXgSDbN4Kl5'),
-                'min' => array('src' => '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', 'hash'=> 'sha384-sC7Bdgy9YlmFGE+HcLLS8ACec+aVuGTAprh0Wenq1mdKJs4DxPUthlbtbNxTbSOu')
+                'no'  => array('src' => 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.js', 'hash'=> 'sha512-kwtW9vT4XIHyDa+WPb1m64Gpe1jCeLQLorYW1tzT5OL2l/5Q7N0hBib/UNH+HFVjWgGzEIfLJt0d8sZTNZYY6Q=='),
+                'min' => array('src' => '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js', 'hash'=> 'sha512-oVbWSv2O4y1UzvExJMHaHcaib4wsBMS5tEP3/YkMP6GmkwRJAa79Jwsv+Y/w7w2Vb/98/Xhvck10LyJweB8Jsw==')
             )
         ),
         JS_CRYPTO_MD5_JS => array(
@@ -148,6 +150,17 @@ $jsArray = array(
                 'no'  => '/js/common/login.js',
                 'min' => '/js/common/login.min.js'
             )
+        ),
+        JS_TABULATOR => array(
+            'no' => array(
+                'no'  => '/js/common/tabulator.js',
+                'min' => '/js/common/tabulator.min.js'
+            ),
+            'cdn' => array(
+                'no'  => '//unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.js',
+                'min' => '//unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js'
+            )
+        
         )
 );
 
@@ -181,6 +194,16 @@ $cssArray = array(
         'cdn' => array(
             'no'  => '//cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.5/css/Jcrop.css',
             'min' => '//cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.5/css/Jcrop.min.css'
+        )
+    ),
+    CSS_TABULATOR => array(
+        'no' => array(
+            'no'  => '/css/common/tabulator.css',
+            'min' => '/css/common/tabulator.min.css'
+        ),
+        'cdn' => array(
+            'no'  => '//unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.css',
+            'min' => '//unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css'
         )
     )
 );

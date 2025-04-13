@@ -39,7 +39,7 @@
      {{ include('header.html') }}
      <noscript>
        <div class="alert alert-danger alert-dismissible" role="alert">
-         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          <strong>Error!</strong> This site makes extensive use of JavaScript. Please enable JavaScript or this site will not function.
        </div>
      </noscript>
@@ -49,8 +49,7 @@
          <div class="alert {{ notification.sev }} {% if notification.dismissible %}alert-dismissible fade show{% endif %}" role="alert">
            {{ notification.msg|raw }}
            {% if notification.dismissible %}
-             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
+             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
              </button>
            {% endif %}
          </div>
@@ -60,14 +59,14 @@
        {% block content %}{% endblock %}
        {{ body|raw }}
      </div>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-64901342-1"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HX4YSSYLZ4"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-64901342-1');
+  gtag('config', 'G-HX4YSSYLZ4');
 </script>
 
      <script>
