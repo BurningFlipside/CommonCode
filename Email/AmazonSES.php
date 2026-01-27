@@ -59,6 +59,10 @@ class AmazonSES extends EmailService
             $args['Source'] = $email->getFromAddress();
             $args['Destination'] = array();
             $args['Destination']['ToAddresses'] = $email->getToAddresses();
+            if(is_string($args['Destination']['ToAddresses']))
+            {
+                $args['Destination']['ToAddresses'] = array($args['Destination']['ToAddresses']);
+            }
             $args['Destination']['CcAddresses'] = $email->getCCAddresses();
             $args['Destination']['BccAddresses'] = $email->getBCCAddresses();
             $args['Message'] = array();
